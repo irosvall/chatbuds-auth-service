@@ -33,9 +33,17 @@ export class AccountController {
     } catch (error) {
       let err = error
 
+      // Dublicate keys error.
       if (err.code === 11000) {
-        // Dublicate keys error.
-        err = createError(409)
+        let message = ''
+
+        if (err.keyPattern.email) {
+          message = 'The email is already taken'
+        } else if (err.keyPattern.username) {
+          message = 'The username is already taken'
+        }
+
+        err = createError(409, message)
         err.innerException = error
       } else if (error.name === 'ValidationError') {
         err = createError(400)

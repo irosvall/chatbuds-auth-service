@@ -25,7 +25,7 @@ const schema = new mongoose.Schema({
     required: [true, 'Username is required.'],
     trim: true,
     minlength: [2, 'The username must contain at least {MINLENGTH} characters.'],
-    maxlenght: [16, 'The username has extended the limit of {MAXLENGTH} characters.'],
+    maxlenght: [24, 'The username has extended the limit of {MAXLENGTH} characters.'],
     validate: [validator.isAlphanumeric, 'The username is only allowed to contain numbers and letters (a-z)']
   },
   password: {
