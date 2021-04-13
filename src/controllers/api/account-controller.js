@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+import fs from 'fs/promises'
+import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { Account } from '../../models/account.js'
 
@@ -12,6 +14,43 @@ import { Account } from '../../models/account.js'
  * Encapsulates the account controller.
  */
 export class AccountController {
+  /**
+   * Authenticates an account.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async login (req, res, next) {
+    try {
+      const account = await Account.authenticate(req.body.email, req.body.password)
+
+      // Create a JWT.
+      const payload = {
+        sub: account.id
+      }
+      const privateKey = await fs.readFile(process.env.PRIVATE_KEY_FILEPATH)
+      const accessToken = jwt.sign(payload, privateKey, {
+        algorithm: 'RS256',
+        expiresIn: Number(process.env.ACCESS_TOKEN_LIFE)
+      })
+
+      res
+        .status(200)
+        .json({
+          access_token: accessToken
+        })
+    } catch (error) {
+      let err = error
+      if (err.name === 'credentialsError') {
+        err = createError(401)
+        err.innerException = error
+      }
+
+      next(err)
+    }
+  }
+
   /**
    * Registers an account.
    *
