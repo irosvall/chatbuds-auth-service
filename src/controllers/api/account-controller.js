@@ -27,7 +27,8 @@ export class AccountController {
 
       // Create a JWT.
       const payload = {
-        sub: account.id
+        sub: account.id,
+        name: account.username
       }
       const privateKey = await fs.readFile(process.env.PRIVATE_KEY_FILEPATH)
       const accessToken = jwt.sign(payload, privateKey, {
