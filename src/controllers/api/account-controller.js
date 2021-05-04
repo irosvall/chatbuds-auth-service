@@ -62,7 +62,7 @@ export class AccountController {
    */
   async register (req, res, next) {
     try {
-      await Account.insert({
+      const account = await Account.insert({
         email: req.body.email,
         username: req.body.username,
         password: req.body.password
@@ -70,7 +70,7 @@ export class AccountController {
 
       res
         .status(201)
-        .end()
+        .json(account)
     } catch (error) {
       let err = error
 
