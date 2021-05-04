@@ -39,6 +39,7 @@ export class AccountController {
       res
         .status(200)
         .json({
+          user: account,
           access_token: accessToken
         })
     } catch (error) {
