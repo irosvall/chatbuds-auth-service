@@ -94,4 +94,27 @@ export class AccountController {
       next(err)
     }
   }
+
+  /**
+   * Deletes the account.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async delete (req, res, next) {
+    try {
+      const response = await Account.deleteOne({ _id: req.account.userID })
+
+      if (response.deletedCount === 0) {
+        next(createError(404))
+        return
+      }
+      res
+        .status(204)
+        .end()
+    } catch (error) {
+      next(error)
+    }
+  }
 }
